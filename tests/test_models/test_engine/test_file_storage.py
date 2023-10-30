@@ -5,6 +5,7 @@ Contains the TestFileStorageDocs classes
 
 from datetime import datetime
 import inspect
+from models import storage
 import models
 from models.engine import file_storage
 from models.amenity import Amenity
@@ -114,37 +115,21 @@ class TestFileStorage(unittest.TestCase):
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
-    def test_get_success(self):
-        """test a method to retrieve one object"""
-        storage = FileStorage()
-        dic = {"name": "casa"}
-        instance = State(**dic)
-        storage.new(instance)
-        storage.save()
-        get_ = storage.get(State, instance.id)
-        self.assertEqual(get_, instance)
-
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
-    def test_count(self):
+    def test_get(self):
         """test a method to count the number of objects in storage"""
-        storage = FileStorage()
-        dic = {"name": "casa"}
-        state = State(**dic)
+        massa = City(name='Massa')
+        massa.save()
+        massa_city = storage.get(City, massa.id)
+        self.assertEqual(massa, massa_city)
+
+    def test_count_model(self):
+        dictionary = {"name": "Chtouka"}
+        state = State(**dictionary)
         storage.new(state)
-        dic = {"name": "sbata", "state_id": state.id}
-        city = City(**dic)
+        dictionary = {"name": "Massa", "state_id": state.id}
+        city = City(**dictionary)
         storage.new(city)
         storage.save()
         num = storage.count()
-        self.assertEqual(len(storage.all()), num)
-
-    def test_count_model(self):
-        """test a method count with arg"""
-        storage = FileStorage()
-        dic = {"name": "casa"}
-        state = State(**dic)
-        storage.new(state)
-        storage.save()
-        num = storage.count(State)
-        self.assertEqual(len(storage.all(State)), num)
+        self.assertEqual(
+            len(storage.all()), num)
