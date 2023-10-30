@@ -16,11 +16,10 @@ def json_ser(obj):
     return (json_obj)
 
 
-def places_json(places, city_id):
+def places_json(lst):
     json_list = []
-    for place in places.values():
-        if place.city_id == city_id:
-            json_list.append(place.to_dict())
+    for place in lst:
+        json_list.append(place.to_dict())
     return (json_list)
 
 
@@ -30,7 +29,7 @@ def get_places(city_id):
     if city is None:
         return abort(404)
     return make_response(
-        dumps(places_json(storage.get(Place), city_id)), 200)
+        dumps(places_json(city.places)), 200)
 
 
 @app_views.route('/places/<place_id>', methods=['GET'])
