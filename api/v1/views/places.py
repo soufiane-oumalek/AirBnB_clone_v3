@@ -82,6 +82,11 @@ def update_place(place_id):
         if key in ['id', 'user_id', 'city_id', 'created_at', 'updated_at']:
             continue
         value = data[key]
-        setattr(place, key, value)
+        if hasattr(place, key):
+            try:
+                value = type(getattr(place, key))(value)
+            except ValueError:
+                pass
+            setattr(place, key, value)
     storage.save()
     return make_response(place.to_dict(), 200)
