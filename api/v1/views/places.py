@@ -47,7 +47,7 @@ def delete_place(place_id):
         abort(404)
     place.delete()
     storage.save()
-    return make_response(({}), 200)
+    return make_response({}, 200)
 
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'])
@@ -64,7 +64,7 @@ def create_place(city_id):
         return abort(404)
     if 'name' not in data:
         abort(400, "Missing name")
-    place = Place(**data)
+    place = Place(city_id=city_id, **data)
     storage.new(place)
     storage.save()
     return make_response((place.to_dict()), 201)
