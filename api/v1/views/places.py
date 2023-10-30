@@ -71,7 +71,7 @@ def create_place(city_id):
 
 
 @app_views.route('/places/<place_id>', methods=['PUT'])
-def update_user(place_id):
+def update_place(place_id):
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
