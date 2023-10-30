@@ -58,6 +58,7 @@ class TestBaseModelDocs(unittest.TestCase):
 
 class TestBaseModel(unittest.TestCase):
     """Test the BaseModel class"""
+
     def test_instantiation(self):
         """Test that object is correctly created"""
         inst = BaseModel()
@@ -82,17 +83,15 @@ class TestBaseModel(unittest.TestCase):
         """Test that two BaseModel instances have different datetime objects
         and that upon creation have identical updated_at and created_at
         value."""
-        tic = datetime.now()
+        tic = datetime.utcnow()
         inst1 = BaseModel()
-        toc = datetime.now()
-        self.assertTrue(int(str(tic)[-6:]) <= int(str(inst1.created_at)[-6:]))
-        self.assertTrue(int(str(toc)[-6:]) >= int(str(inst1.created_at)[-6:]))
+        toc = datetime.utcnow()
+        self.assertTrue(tic <= inst1.created_at <= toc)
         time.sleep(1e-4)
-        tic = datetime.now()
+        tic = datetime.utcnow()
         inst2 = BaseModel()
-        toc = datetime.now()
-        self.assertTrue(int(str(tic)[-6:]) <= int(str(inst2.created_at)[-6:]))
-        self.assertTrue(int(str(toc)[-6:]) >= int(str(inst2.created_at)[-6:]))
+        toc = datetime.utcnow()
+        self.assertTrue(tic <= inst2.created_at <= toc)
         self.assertEqual(inst1.created_at, inst1.updated_at)
         self.assertEqual(inst2.created_at, inst2.updated_at)
         self.assertNotEqual(inst1.created_at, inst2.created_at)
