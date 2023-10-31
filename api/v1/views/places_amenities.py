@@ -17,18 +17,19 @@ def json_ser(obj):
     return (json_obj)
 
 
-def rev_json(lst):
+def ids_json(lst):
     json_list = []
     for id in lst:
         amen = storage.get(Amenity, id)
-        json_list.append(amen.to_dict())
+        if amen is not None:
+            json_list.append(amen.to_dict())
     return (json_list)
 
 
-def ids_json(lst):
+def rev_json(lst):
     json_list = []
-    for place in lst:
-        json_list.append(place.to_dict())
+    for amen in lst:
+        json_list.append(amen.to_dict())
     return (json_list)
 
 
