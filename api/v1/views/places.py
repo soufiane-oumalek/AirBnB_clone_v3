@@ -7,6 +7,7 @@ from models.user import User
 from models.place import Place
 from models.state import State
 from models.city import City
+from models.amenity import Amenity
 from json import dumps
 
 
@@ -104,4 +105,33 @@ def search_place():
         return make_response(
             dumps(list(json_ser(places).values())), 200)
     else:
-        return make_response(dumps([]), 200)
+        states = []
+        places = []
+        if 'states' in data:
+            for id in data['states']:
+                states.append(storage.get(State, id))
+            for st in states:
+                if st:
+                    for city in st.cities:
+                        for place in city.places:
+                            places.append(place)
+        if 'cities' in data:
+            cities = []
+            for id in data['cities']:
+                cities.append(storage.get(City, id))
+            for city in cities:
+                if city:
+                    if city.state not in states:
+                        for place in city.places:
+                            places.append(place)
+        if 'amenities' in data:
+            amen = []
+            for id in data['amenities']:
+                amen.append(storage.get(Amenity, id))
+            for am in amen:
+                if am:
+                    for plc in am.place_amenities:
+                        if plc not in places:
+                            places.append(plc)
+    return make_response(
+        dumps(places_json(places)), 200)
