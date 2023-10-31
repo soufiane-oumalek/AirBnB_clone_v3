@@ -5,6 +5,7 @@ from api.v1.views import app_views
 from models import storage
 from models.user import User
 from models.place import Place
+from models.state import State
 from models.city import City
 from json import dumps
 
@@ -90,3 +91,17 @@ def update_place(place_id):
             setattr(place, key, value)
     storage.save()
     return make_response(place.to_dict(), 200)
+
+
+@app_views.route('/places_search', methods=['POST'])
+def search_place():
+    data = request.get_json()
+    if data is None:
+        abort(400, "Not a JSON")
+    if data == {} or list(data.values()) == [[], [], []]:
+        print('here')
+        places = storage.all(Place)
+        return make_response(
+            dumps(list(json_ser(places).values())), 200)
+    else:
+        return make_response(dumps([]), 200)
