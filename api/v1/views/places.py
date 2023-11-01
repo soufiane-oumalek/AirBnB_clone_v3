@@ -133,5 +133,7 @@ def search_place():
                     for plc in am.place_amenities:
                         if plc not in places:
                             places.append(plc)
+                        else:
+                            break
     return make_response(
         dumps(places_json(places)), 200)
