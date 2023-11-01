@@ -135,5 +135,17 @@ def search_place():
                             places.append(plc)
                         else:
                             break
+# +++++++++++++++++++++++++++
+            for plc in places:
+                o = 0
+                for am in amen:
+                    if plc in am.place_amenities:
+                        o = 1
+                if o == 0:
+                    places.remove(plc)
+                    #     places.remove(plc)
+                    #     break
+# +++++++++++++++++++++++++++
+
     return make_response(
         dumps(places_json(places)), 200)
